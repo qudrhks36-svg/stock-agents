@@ -13,7 +13,7 @@ import {
   runChief,
 } from "@/lib/agents";
 
-export const maxDuration = 120;
+export const maxDuration = 300;
 
 function sseLine(obj) {
   return `data: ${JSON.stringify(obj)}\n\n`;
@@ -46,10 +46,12 @@ export async function POST(req) {
         const sentiment = await runSentimentAnalyst(target, naverTitles, dcPosts);
         send({ type: "message", persona: "sentiment", message: sentiment });
 
-        const bull = await runBull(target, technical, newsAnalysis, sentiment);
+        // 매수/매도 논자는 서로 결과에 의존하지 않으므로 병렬 실행해 타임아웃 여유를 확보한다
+        const [bull, bear] = await Promise.all([
+          runBull(target, technical, newsAnalysis, sentiment),
+          runBear(target, technical, newsAnalysis, sentiment),
+        ]);
         send({ type: "message", persona: "bull", message: bull });
-
-        const bear = await runBear(target, technical, newsAnalysis, sentiment);
         send({ type: "message", persona: "bear", message: bear });
 
         const chief = await runChief(target, technical, newsAnalysis, sentiment, bull, bear);
