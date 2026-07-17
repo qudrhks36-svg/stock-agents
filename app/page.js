@@ -85,10 +85,16 @@ export default function Home() {
     if (e.key === "Enter") startAnalysis();
   }
 
+  function personaStatus(id) {
+    if (messages.some((m) => m.persona === id)) return "done";
+    if (running && nextPersona === id) return "active";
+    return "idle";
+  }
+
   return (
     <div className="wrap">
       <h1>📊 주식 애널리스트 팀</h1>
-      <p className="sub">종목명이나 티커를 입력하면 6명의 AI 애널리스트가 순서대로 분석·토론합니다.</p>
+      <p className="sub">종목명이나 티커를 입력하면 사무실의 6명이 순서대로 자리에서 일어나 분석·토론합니다.</p>
 
       <div className="input-bar">
         <input
@@ -110,29 +116,47 @@ export default function Home() {
         </div>
       )}
 
-      <div className="chat">
+      <div className="office">
+        <div className="office-grid">
+          {ORDER.map((id) => {
+            const p = PERSONAS[id];
+            const status = personaStatus(id);
+            return (
+              <div className={`desk ${status}`} key={id}>
+                {status === "active" && <div className="tag busy">분석 중</div>}
+                {status === "done" && <div className="tag done">완료</div>}
+                <img className="desk-avatar" src={p.avatar} alt={p.name} />
+                <div className="desk-surface"></div>
+                <div className="desk-name">{p.name}</div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+
+      <div className="dialogue-log">
         {messages.map((m, i) => {
           const p = PERSONAS[m.persona];
           return (
-            <div className={`chat-msg ${m.persona}`} key={i}>
-              <img className="avatar" src={p.avatar} alt={p.name} />
-              <div className="chat-body">
-                <div className="chat-name">
-                  {p.name} · {p.role}
+            <div className={`dlg ${m.persona}`} key={i}>
+              <img className="dlg-avatar" src={p.avatar} alt={p.name} />
+              <div className="dlg-box">
+                <div className="dlg-name">
+                  {p.name} <span>· {p.role}</span>
                 </div>
-                <div className="bubble">{m.message}</div>
+                <div className="dlg-text">{m.message}</div>
               </div>
             </div>
           );
         })}
 
         {running && nextPersona && (
-          <div className={`chat-msg ${nextPersona}`}>
-            <img className="avatar" src={PERSONAS[nextPersona].avatar} alt="" />
-            <div className="chat-body">
-              <div className="chat-name">{PERSONAS[nextPersona].name}</div>
-              <div className="bubble">
-                <span className="typing">
+          <div className={`dlg ${nextPersona} typing`}>
+            <img className="dlg-avatar" src={PERSONAS[nextPersona].avatar} alt="" />
+            <div className="dlg-box">
+              <div className="dlg-name">{PERSONAS[nextPersona].name}</div>
+              <div className="dlg-text">
+                <span className="typing-dots">
                   <span></span>
                   <span></span>
                   <span></span>
