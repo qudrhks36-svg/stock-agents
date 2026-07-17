@@ -129,7 +129,7 @@ export default function Home() {
       <div className="input-bar">
         <input
           type="text"
-          placeholder="예: 삼성전자, 005930, AAPL, NVDA"
+          placeholder="예: 삼성전자, 005930, 엔비디아, NVDA"
           value={input}
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={handleKeyDown}
