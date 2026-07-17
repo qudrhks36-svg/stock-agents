@@ -124,7 +124,7 @@ export default function Home() {
   return (
     <div className="wrap">
       <h1>📊 주식 애널리스트 팀</h1>
-      <p className="sub">종목명이나 티커를 입력하면 사무실의 6명이 순서대로 자리에서 일어나 분석·토론합니다.</p>
+      <p className="sub">종목명이나 티커를 입력하면 사무실의 6명이 각자 자리에서 순서대로 말풍선을 띄우며 분석·토론합니다.</p>
 
       <div className="input-bar">
         <input
@@ -146,55 +146,38 @@ export default function Home() {
         </div>
       )}
 
-      <div className="office">
-        <div className="office-grid">
-          {ORDER.map((id) => {
-            const p = PERSONAS[id];
-            const status = personaStatus(id);
-            return (
-              <div className={`desk ${status}`} key={id}>
+      <div className="board">
+        {ORDER.map((id) => {
+          const p = PERSONAS[id];
+          const status = personaStatus(id);
+          const msg = messages.find((m) => m.persona === id);
+          return (
+            <div className={`station ${id} ${status}`} key={id}>
+              <div className="bubble-slot">
+                {status === "active" && (
+                  <div className="speech-bubble">
+                    <span className="typing-dots">
+                      <span></span>
+                      <span></span>
+                      <span></span>
+                    </span>
+                  </div>
+                )}
+                {status === "done" && msg && <div className="speech-bubble">{msg.message}</div>}
+              </div>
+              <div className="char-wrap">
                 {status === "active" && <div className="tag busy">분석 중</div>}
                 {status === "done" && <div className="tag done">완료</div>}
-                <Avatar id={id} className="desk-avatar" />
+                <Avatar id={id} className="station-avatar" />
                 <div className="desk-surface"></div>
-                <div className="desk-name">{p.name}</div>
-              </div>
-            );
-          })}
-        </div>
-      </div>
-
-      <div className="dialogue-log">
-        {messages.map((m, i) => {
-          const p = PERSONAS[m.persona];
-          return (
-            <div className={`dlg ${m.persona}`} key={i}>
-              <Avatar id={m.persona} className="dlg-avatar" />
-              <div className="dlg-box">
-                <div className="dlg-name">
-                  {p.name} <span>· {p.role}</span>
+                <div className="station-name">
+                  {p.name}
+                  <span className="station-role"> · {p.role}</span>
                 </div>
-                <div className="dlg-text">{m.message}</div>
               </div>
             </div>
           );
         })}
-
-        {running && nextPersona && (
-          <div className={`dlg ${nextPersona} typing`}>
-            <Avatar id={nextPersona} className="dlg-avatar" />
-            <div className="dlg-box">
-              <div className="dlg-name">{PERSONAS[nextPersona].name}</div>
-              <div className="dlg-text">
-                <span className="typing-dots">
-                  <span></span>
-                  <span></span>
-                  <span></span>
-                </span>
-              </div>
-            </div>
-          </div>
-        )}
       </div>
 
       {error && <p className="status error">⚠️ {error}</p>}
