@@ -6,15 +6,15 @@ body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, "Malgun Gothic", "Apple SD Gothic Neo", sans-serif;
   background:
-    radial-gradient(ellipse 900px 500px at 50% -10%, #2c2438 0%, #1b1620 55%),
+    radial-gradient(ellipse 1400px 700px at 50% -10%, #2c2438 0%, #1b1620 55%),
     #15111c;
   color: #ece5d8;
 }
 
 .wrap {
-  max-width: 720px;
+  max-width: 1180px;
   margin: 0 auto;
-  padding: 24px 16px 100px;
+  padding: 22px 20px 60px;
 }
 
 h1 {
@@ -26,13 +26,13 @@ h1 {
 .sub {
   color: #a89bb0;
   font-size: 13.5px;
-  margin: 0 0 20px;
+  margin: 0 0 18px;
 }
 
 .input-bar {
   display: flex;
   gap: 8px;
-  margin-bottom: 20px;
+  margin-bottom: 16px;
   position: sticky;
   top: 12px;
   z-index: 10;
@@ -99,31 +99,104 @@ h1 {
   font-size: 15px;
 }
 
-/* ============ 사무실 캐릭터 로스터 ============ */
-.office {
-  margin-bottom: 18px;
-}
-
-.office-grid {
+/* ============ 사무실 보드: 캐릭터 + 말풍선 한 화면 ============ */
+.board {
   background: repeating-linear-gradient(90deg, #cdb083 0 22px, #c2a476 22px 44px);
   border: 4px solid #6b4a28;
-  box-shadow: inset 0 0 0 4px #4a3018, 0 6px 16px rgba(0, 0, 0, 0.35);
-  border-radius: 6px;
-  padding: 26px 14px 16px;
+  box-shadow: inset 0 0 0 4px #4a3018, 0 8px 22px rgba(0, 0, 0, 0.4);
+  border-radius: 8px;
+  padding: 30px 22px;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 26px 6px;
+  gap: 34px 20px;
 }
 
-@media (min-width: 480px) {
-  .office-grid {
-    grid-template-columns: repeat(6, 1fr);
-    gap: 22px 8px;
-    padding: 26px 16px 16px;
+@media (max-width: 860px) {
+  .board {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 30px 14px;
+    padding: 24px 14px;
   }
 }
 
-.desk {
+@media (max-width: 520px) {
+  .board {
+    grid-template-columns: 1fr;
+  }
+}
+
+.station {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.bubble-slot {
+  min-height: 52px;
+  width: 100%;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+.speech-bubble {
+  --bubble-bg: #f3ecd8;
+  position: relative;
+  width: 100%;
+  background: var(--bubble-bg);
+  color: #241f18;
+  border: 3px solid #241a10;
+  border-radius: 8px;
+  padding: 11px 13px;
+  font-size: 13.5px;
+  line-height: 1.65;
+  white-space: pre-wrap;
+  box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.35);
+  animation: bubble-in 0.25s ease;
+}
+
+.speech-bubble::after,
+.speech-bubble::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  border-style: solid;
+}
+
+.speech-bubble::after {
+  bottom: -13px;
+  border-width: 12px 9px 0 9px;
+  border-color: #241a10 transparent transparent transparent;
+}
+
+.speech-bubble::before {
+  bottom: -8px;
+  z-index: 1;
+  border-width: 9px 7px 0 7px;
+  border-color: var(--bubble-bg) transparent transparent transparent;
+}
+
+@keyframes bubble-in {
+  from { opacity: 0; transform: translateY(6px) scale(0.97); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .speech-bubble { animation: none; }
+}
+
+.station.bull .speech-bubble { --bubble-bg: #e9f6ec; }
+.station.bear .speech-bubble { --bubble-bg: #f8e9e6; }
+.station.chief .speech-bubble {
+  --bubble-bg: #2a2a2a;
+  color: #f0ead9;
+  border-color: #000;
+}
+.station.chief .speech-bubble::after { border-color: #000 transparent transparent transparent; }
+
+.char-wrap {
   position: relative;
   display: flex;
   flex-direction: column;
@@ -132,7 +205,7 @@ h1 {
 
 .tag {
   position: absolute;
-  top: -24px;
+  top: -14px;
   left: 50%;
   transform: translateX(-50%);
   background: #1a1a1a;
@@ -143,6 +216,7 @@ h1 {
   white-space: nowrap;
   letter-spacing: 0.02em;
   border: 1px solid #000;
+  z-index: 2;
 }
 
 .tag.busy {
@@ -157,9 +231,7 @@ h1 {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .tag.busy {
-    animation: none;
-  }
+  .tag.busy { animation: none; }
 }
 
 @keyframes tag-pulse {
@@ -167,10 +239,10 @@ h1 {
   50% { opacity: 0.55; }
 }
 
-.desk-avatar {
-  width: 38px;
-  height: 38px;
-  border-radius: 4px;
+.station-avatar {
+  width: 54px;
+  height: 54px;
+  border-radius: 6px;
   object-fit: cover;
   background: #2c2c34;
   border: 2px solid #000;
@@ -179,112 +251,50 @@ h1 {
   transition: filter 0.2s;
 }
 
-.desk.active .desk-avatar {
+.station.active .station-avatar,
+.station.done .station-avatar {
   filter: none;
-  box-shadow: 0 0 0 2px #fff, 2px 2px 0 rgba(0, 0, 0, 0.4), 0 0 14px rgba(255, 215, 122, 0.6);
 }
 
-.desk.done .desk-avatar {
-  filter: none;
-  opacity: 0.9;
+.station.active .station-avatar {
+  box-shadow: 0 0 0 2px #fff, 2px 2px 0 rgba(0, 0, 0, 0.4), 0 0 16px rgba(255, 215, 122, 0.6);
 }
 
 .avatar-fallback {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 18px;
+  font-size: 24px;
   background: #2c2c34;
   border: 2px solid #000;
   box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.35);
-  border-radius: 4px;
+  border-radius: 6px;
 }
 
 .desk-surface {
-  width: 56px;
-  height: 20px;
-  margin-top: -6px;
+  width: 76px;
+  height: 24px;
+  margin-top: -8px;
   background: linear-gradient(180deg, #a9784a, #8b5e34);
   border: 2px solid #4a3018;
   border-radius: 2px;
   box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.25);
 }
 
-.desk-name {
-  font-size: 9.5px;
+.station-name {
+  font-size: 11.5px;
   color: #3a2a16;
   font-weight: 800;
-  margin-top: 5px;
+  margin-top: 6px;
   text-align: center;
-  line-height: 1.25;
+  line-height: 1.3;
 }
 
-/* ============ 대화 로그 (인디게임 대사창) ============ */
-.dialogue-log {
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-}
-
-.dlg {
-  display: flex;
-  gap: 10px;
-  align-items: flex-start;
-  animation: dlg-in 0.3s ease;
-}
-
-@keyframes dlg-in {
-  from { opacity: 0; transform: translateY(6px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .dlg { animation: none; }
-}
-
-.dlg-avatar {
-  width: 40px;
-  height: 40px;
-  border-radius: 4px;
-  object-fit: cover;
-  flex-shrink: 0;
-  border: 2px solid #000;
-  box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.3);
-}
-
-.dlg-box {
-  flex: 1;
-  background: #f3ecd8;
-  color: #241f18;
-  border: 3px solid #241a10;
-  border-radius: 3px;
-  padding: 11px 14px;
-  box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.35);
-}
-
-.dlg-name {
-  font: 800 11.5px ui-monospace, "Courier New", monospace;
-  color: #7a4f18;
-  margin-bottom: 6px;
-  letter-spacing: 0.01em;
-}
-
-.dlg-name span {
+.station-role {
   font-weight: 600;
-  color: #9c8a6a;
-  font-family: -apple-system, "Malgun Gothic", "Apple SD Gothic Neo", sans-serif;
+  color: #6b5738;
+  font-size: 10px;
 }
-
-.dlg-text {
-  font-size: 14px;
-  line-height: 1.7;
-  white-space: pre-wrap;
-}
-
-.dlg.bull .dlg-box { background: #e9f6ec; }
-.dlg.bear .dlg-box { background: #f8e9e6; }
-.dlg.chief .dlg-box { background: #2a2a2a; color: #f0ead9; border-color: #000; }
-.dlg.chief .dlg-name { color: #e0b74f; }
 
 .typing-dots {
   display: inline-flex;
