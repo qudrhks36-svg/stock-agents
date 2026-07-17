@@ -5,6 +5,17 @@ import { PERSONAS } from "@/lib/personas";
 
 const ORDER = ["technical", "news", "sentiment", "bull", "bear", "chief"];
 
+// 픽셀 아바타는 Pollinations.ai가 그때그때 생성해서 처음 요청 시 느리거나 실패할 수 있다.
+// 깨진 이미지 아이콘이 보이는 대신 캐릭터 이모지로 자연스럽게 대체한다.
+function Avatar({ id, className }) {
+  const [broken, setBroken] = useState(false);
+  const p = PERSONAS[id];
+  if (broken) {
+    return <span className={`${className} avatar-fallback`}>{p.fallback}</span>;
+  }
+  return <img className={className} src={p.avatar} alt={p.name} onError={() => setBroken(true)} />;
+}
+
 export default function Home() {
   const [input, setInput] = useState("");
   const [target, setTarget] = useState(null);
@@ -125,7 +136,7 @@ export default function Home() {
               <div className={`desk ${status}`} key={id}>
                 {status === "active" && <div className="tag busy">분석 중</div>}
                 {status === "done" && <div className="tag done">완료</div>}
-                <img className="desk-avatar" src={p.avatar} alt={p.name} />
+                <Avatar id={id} className="desk-avatar" />
                 <div className="desk-surface"></div>
                 <div className="desk-name">{p.name}</div>
               </div>
@@ -139,7 +150,7 @@ export default function Home() {
           const p = PERSONAS[m.persona];
           return (
             <div className={`dlg ${m.persona}`} key={i}>
-              <img className="dlg-avatar" src={p.avatar} alt={p.name} />
+              <Avatar id={m.persona} className="dlg-avatar" />
               <div className="dlg-box">
                 <div className="dlg-name">
                   {p.name} <span>· {p.role}</span>
@@ -152,7 +163,7 @@ export default function Home() {
 
         {running && nextPersona && (
           <div className={`dlg ${nextPersona} typing`}>
-            <img className="dlg-avatar" src={PERSONAS[nextPersona].avatar} alt="" />
+            <Avatar id={nextPersona} className="dlg-avatar" />
             <div className="dlg-box">
               <div className="dlg-name">{PERSONAS[nextPersona].name}</div>
               <div className="dlg-text">
