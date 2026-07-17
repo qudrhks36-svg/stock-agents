@@ -1,19 +1,38 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { PERSONAS } from "@/lib/personas";
 
 const ORDER = ["technical", "news", "sentiment", "bull", "bear", "chief"];
 
 // 픽셀 아바타는 Pollinations.ai가 그때그때 생성해서 처음 요청 시 느리거나 실패할 수 있다.
 // 깨진 이미지 아이콘이 보이는 대신 캐릭터 이모지로 자연스럽게 대체한다.
+// 서버 렌더링된 <img>는 React가 하이드레이션되기 전에 이미 로드를 시도하기 때문에,
+// 그 사이에 실패하면 onError가 못 잡을 수 있어 마운트 직후 한 번 더 상태를 확인한다.
 function Avatar({ id, className }) {
   const [broken, setBroken] = useState(false);
+  const imgRef = useRef(null);
   const p = PERSONAS[id];
+
+  useEffect(() => {
+    const img = imgRef.current;
+    if (img && img.complete && img.naturalWidth === 0) {
+      setBroken(true);
+    }
+  }, []);
+
   if (broken) {
     return <span className={`${className} avatar-fallback`}>{p.fallback}</span>;
   }
-  return <img className={className} src={p.avatar} alt={p.name} onError={() => setBroken(true)} />;
+  return (
+    <img
+      ref={imgRef}
+      className={className}
+      src={p.avatar}
+      alt={p.name}
+      onError={() => setBroken(true)}
+    />
+  );
 }
 
 export default function Home() {
