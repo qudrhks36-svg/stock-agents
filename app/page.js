@@ -9,28 +9,48 @@ const ORDER = ["technical", "news", "sentiment", "bull", "bear", "chief"];
 // 깨진 이미지 아이콘이 보이는 대신 캐릭터 이모지로 자연스럽게 대체한다.
 // 서버 렌더링된 <img>는 React가 하이드레이션되기 전에 이미 로드를 시도하기 때문에,
 // 그 사이에 실패하면 onError가 못 잡을 수 있어 마운트 직후 한 번 더 상태를 확인한다.
-function Avatar({ id, className }) {
-  const [broken, setBroken] = useState(false);
+//
+// 페르소나가 "분석 중"일 때는 idle/talk 두 프레임을 번갈아 보여줘서 말하는 듯한
+// 애니메이션을 낸다. idle/완료 상태에서는 idle 프레임에서 멈춘다.
+function Avatar({ id, status, className }) {
+  const [idleBroken, setIdleBroken] = useState(false);
+  const [talkBroken, setTalkBroken] = useState(false);
+  const [frame, setFrame] = useState("idle");
   const imgRef = useRef(null);
   const p = PERSONAS[id];
 
   useEffect(() => {
     const img = imgRef.current;
     if (img && img.complete && img.naturalWidth === 0) {
-      setBroken(true);
+      setIdleBroken(true);
     }
   }, []);
 
-  if (broken) {
+  useEffect(() => {
+    if (status !== "active" || talkBroken) {
+      setFrame("idle");
+      return;
+    }
+    const timer = setInterval(() => {
+      setFrame((f) => (f === "idle" ? "talk" : "idle"));
+    }, 450);
+    return () => clearInterval(timer);
+  }, [status, talkBroken]);
+
+  if (idleBroken) {
     return <span className={`${className} avatar-fallback`}>{p.fallback}</span>;
   }
+  const src = frame === "talk" && !talkBroken ? p.avatar.talk : p.avatar.idle;
   return (
     <img
       ref={imgRef}
       className={className}
-      src={p.avatar}
+      src={src}
       alt={p.name}
-      onError={() => setBroken(true)}
+      onError={() => {
+        if (frame === "talk") setTalkBroken(true);
+        else setIdleBroken(true);
+      }}
     />
   );
 }
@@ -168,7 +188,7 @@ export default function Home() {
               <div className="char-wrap">
                 {status === "active" && <div className="tag busy">분석 중</div>}
                 {status === "done" && <div className="tag done">완료</div>}
-                <Avatar id={id} className="station-avatar" />
+                <Avatar id={id} status={status} className="station-avatar" />
                 <div className="desk-surface"></div>
                 <div className="station-name">
                   {p.name}

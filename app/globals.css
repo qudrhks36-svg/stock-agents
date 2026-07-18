@@ -106,26 +106,20 @@ h1 {
   box-shadow: inset 0 0 0 4px #4a3018, 0 8px 22px rgba(0, 0, 0, 0.4);
   border-radius: 8px;
   padding: 30px 22px;
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 34px 20px;
+  display: flex;
+  gap: 20px;
+  overflow-x: auto;
 }
 
 @media (max-width: 860px) {
   .board {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 30px 14px;
+    gap: 14px;
     padding: 24px 14px;
   }
 }
 
-@media (max-width: 520px) {
-  .board {
-    grid-template-columns: 1fr;
-  }
-}
-
 .station {
+  flex: 1 0 150px;
   display: flex;
   flex-direction: column;
   align-items: center;
