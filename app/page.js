@@ -189,7 +189,6 @@ export default function Home() {
                 {status === "active" && <div className="tag busy">분석 중</div>}
                 {status === "done" && <div className="tag done">완료</div>}
                 <Avatar id={id} status={status} className="station-avatar" />
-                <div className="desk-surface"></div>
                 <div className="station-name">
                   {p.name}
                   <span className="station-role"> · {p.role}</span>
