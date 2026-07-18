@@ -275,9 +275,10 @@ h1 {
 }
 
 .station-avatar {
-  width: clamp(96px, 11vw, 168px);
-  height: clamp(144px, 16.5vw, 252px);
+  width: clamp(110px, 12vw, 190px);
+  height: clamp(110px, 12vw, 190px);
   object-fit: contain;
+  image-rendering: pixelated;
   filter: grayscale(0.75) brightness(0.55);
   transition: filter 0.2s;
 }

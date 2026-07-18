@@ -34,6 +34,13 @@
 - git 연동 없음. `deploy_to_vercel` 도구로 매번 전체 소스를 업로드하는 방식이라, `git push`만으로는 배포가 안 바뀜.
 - 무료 OpenRouter 모델을 순차로 6번 호출하는 구조라 전체 분석에 1~2분 정도 걸림 (실측 약 100초/삼성전자). 더 빠르게 하려면 `lib/llm.js`를 유료 모델로 바꾸면 됨.
 
+## 캐릭터 스프라이트 출처
+
+`public/sprites/`의 캐릭터 이미지는 CraftPix의 무료 "Tiny Hero Sprites" 팩(Pink/Owlet/Dude Monster,
+https://craftpix.net/freebies/ , 라이선스: https://craftpix.net/file-licenses/ — 출처 표시 불필요,
+상업적 이용 가능)에서 idle/attack 프레임을 잘라내고 페르소나별로 색조(hue)만 바꿔 만들었다.
+Pollinations.ai 실시간 생성 방식은 폐기했고, 정적 파일이라 항상 즉시 로드된다.
+
 ## 알려진 한계 / 다음에 손볼 만한 것
 
 - 미국 종목은 여론 분석(레딧/스탁트윗 등) 소스가 없음 — `fetchNaverBoard`가 국내 전용이라 해외 종목은 여론 분석가가 디시 데이터만 보고 판단.
