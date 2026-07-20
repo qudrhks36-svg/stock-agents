@@ -201,6 +201,38 @@ export default function Home() {
 
       {error && <p className="status error">⚠️ {error}</p>}
 
+      {(running || messages.length > 0) && (
+        <div className="timeline">
+          <h2 className="timeline-title">📋 역할별 분석 요약</h2>
+          {ORDER.map((id) => {
+            const p = PERSONAS[id];
+            const status = personaStatus(id);
+            const msg = messages.find((m) => m.persona === id);
+            return (
+              <div className={`timeline-item ${id} ${status}`} key={id}>
+                <Avatar id={id} status={status} className="timeline-avatar" />
+                <div className="timeline-body">
+                  <div className="timeline-head">
+                    <span className="timeline-name">{p.name}</span>
+                    <span className="timeline-role">{p.role}</span>
+                    {status === "done" && <span className="timeline-badge done">완료</span>}
+                    {status === "active" && <span className="timeline-badge busy">작성 중</span>}
+                    {status === "idle" && <span className="timeline-badge idle">대기</span>}
+                  </div>
+                  <div className="timeline-text">
+                    {status === "done" && msg
+                      ? msg.message
+                      : status === "active"
+                        ? "분석 내용을 작성하는 중입니다..."
+                        : "차례를 기다리는 중입니다."}
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      )}
+
       {messages.some((m) => m.persona === "chief") && (
         <div className="disclaimer">
           ⚠️ 이 리포트는 공개 데이터(시세·뉴스·커뮤니티 게시글)를 AI가 요약·해석한 참고 자료이며 투자 권유가

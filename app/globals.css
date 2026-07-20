@@ -350,6 +350,116 @@ h1 {
   color: #e08a72;
 }
 
+/* ============ 역할별 정리 타임라인: 오피스 보드 아래, 순서대로 텍스트 요약 ============ */
+.timeline {
+  margin-top: 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.timeline-title {
+  font-size: 14px;
+  color: #f3ecd8;
+  margin: 0 0 2px;
+}
+
+.timeline-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  background: #241f2e;
+  border: 1px solid #4a3f5c;
+  border-radius: 8px;
+  padding: 10px 14px;
+}
+
+.timeline-item.active {
+  border-color: #e0b74f;
+}
+
+.timeline-item.done {
+  border-color: #5a7a5f;
+}
+
+.timeline-avatar {
+  width: 40px;
+  height: 40px;
+  flex: 0 0 auto;
+  object-fit: contain;
+  image-rendering: pixelated;
+  filter: grayscale(0.75) brightness(0.55);
+}
+
+.timeline-item.active .timeline-avatar,
+.timeline-item.done .timeline-avatar {
+  filter: none;
+}
+
+.timeline-item .avatar-fallback {
+  width: 40px;
+  height: 40px;
+  flex: 0 0 auto;
+  font-size: 24px;
+}
+
+.timeline-body {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.timeline-head {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 4px;
+}
+
+.timeline-name {
+  font-weight: 800;
+  font-size: 13.5px;
+  color: #f3ecd8;
+}
+
+.timeline-role {
+  font-size: 11px;
+  color: #a89bb0;
+}
+
+.timeline-badge {
+  font: 800 8.5px ui-monospace, "Courier New", monospace;
+  padding: 2px 7px;
+  border-radius: 2px;
+  letter-spacing: 0.02em;
+}
+
+.timeline-badge.idle {
+  background: #3a3448;
+  color: #a89bb0;
+}
+
+.timeline-badge.busy {
+  background: #ffb020;
+  color: #1a1200;
+}
+
+.timeline-badge.done {
+  background: #5fbf7a;
+  color: #0c2210;
+}
+
+.timeline-text {
+  font-size: 13px;
+  line-height: 1.65;
+  color: #cfc6dd;
+  white-space: pre-wrap;
+}
+
+.timeline-item.idle .timeline-text {
+  color: #7c7189;
+}
+
 .disclaimer {
   margin-top: 24px;
   padding: 12px 14px;
